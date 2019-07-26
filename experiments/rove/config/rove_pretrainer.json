@@ -1,0 +1,62 @@
+{
+    /* ===========
+        VARIABLES
+       =========== */
+    "random_seed": 123,
+    "numpy_seed" : 321,
+
+    "train_data_path": "/home/guntara/data-gpu/guntara_workspace/informal-data/working/split.txt",
+
+    /* ================
+        DATASET READER
+       ================ */
+    "dataset_reader": {
+        "type": "plain_reader",
+        "token_indexers": {
+            "rove": {
+                "type": "bme"
+            }
+        }
+    },
+
+    /* =======
+        MODEL
+       ======= */
+    "model": {
+        "type": "rove_trainer",
+        "text_field_embedder": {
+            "rove": {
+                "type": "seq2seq_encoder",
+                "encoder": {
+                    "type": "lstm",
+                    "input_size": ,
+                    "hidden_size": 128,
+                    "num_layers": 2,
+                    "dropout": 0.2,
+                    "bidirectional": true
+                }
+            }
+        },
+        "window_size": 3,
+        "neg_sample": 5
+    },
+
+    /* ==========
+        ITERATOR
+       ========== */
+    "iterator": {
+        "type": "bucket",
+        "batch_size": 32
+    },
+
+    /* =========
+        TRAINER
+       ========= */
+    "trainer": {
+        "optimizer": {
+            "type": "Adam",
+            "lr"  : 0.001
+        },
+
+    }
+}

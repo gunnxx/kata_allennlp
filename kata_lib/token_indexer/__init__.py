@@ -1,0 +1,1 @@
+from kata_lib.token_indexer.bme_token_indexer import BMETokenIndexer

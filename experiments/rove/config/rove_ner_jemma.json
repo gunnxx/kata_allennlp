@@ -1,0 +1,126 @@
+{
+    /* ===========
+        VARIABLES
+       =========== */
+    "random_seed": 13370,
+    "numpy_seed": 1337,
+
+    "evaluate_on_test": true,
+
+    "train_data_path": "/home/rezka/data-gpu/rezka_workspace/super-model/data-all/jemma/raw/data-train.conll",
+    "validation_data_path": "/home/rezka/data-gpu/rezka_workspace/super-model/data-all/jemma/raw/data-dev.conll",
+    "test_data_path": "/home/rezka/data-gpu/rezka_workspace/super-model/data-all/jemma/raw/data-test.conll",
+
+
+    /* ================
+        DATASET READER
+       ================ */
+    "dataset_reader": {
+        "type": "custom_conll",
+        "token_indexers": {
+            "word_tokens": {
+                "type": "single_id",
+                "lowercase_tokens": true
+            },
+            "char_tokens": {
+                "type": "characters"
+            },
+            "rove":{
+                "type": "bme"
+            }
+        },
+        "column_headers": ["tokens", "ner"],
+        "encoding": "utf-8"
+    },
+
+
+    /* =======
+        MODEL
+       ======= */
+    "model": {
+        "type": "crf_tagger_pretrain",
+
+        "initial_model_file": "/home/rezka/data-gpu/rezka_workspace/super-model/models/allen-elmo/yesboss/w_elmo/tune/0.65_idwiki/model.tar.gz",
+        
+        "constraint_type": "BIO",
+        "dropout": 0.25,
+        "include_start_end_transitions": false,
+
+        // EMBEDDING
+        // Using 3 types of embedding and concat
+        "text_field_embedder": {
+            "word_tokens":{
+                "type": "embedding",
+                "embedding_dim": 50,
+                "trainable": true
+            },
+            "char_tokens":{
+                "type": "character_encoding",
+                "embedding":{
+                    "embedding_dim": 16
+                },
+                "encoder":{
+                    "type": "cnn",
+                    "embedding_dim": 16,
+                    "num_filters": 128,
+                    "ngram_filter_sizes": [3],
+                    "conv_layer_activation": "relu"
+                }
+            },
+            "rove":{
+                "type": "seq2seq_encoder",
+                "encoder": {
+                    "type": "lstm",
+                    "input_size": ,
+                    "hidden_size": 128,
+                    "num_layers": 2,
+                    "dropout": 0.2,
+                    "bidirectional": true
+                },
+                "projection_dim": 100
+            }
+        },
+
+        // ENCODER
+        "encoder": {
+            "type": "lstm",
+            "input_size": ,
+            "hidden_size": 200,
+            "num_layers": 2,
+            "dropout": 0.25,
+            "bidirectional": true
+        },
+
+        // REGULARIZER
+        "regularizer": [
+            ["scalar_parameters", {"type": "l2", "alpha": 0.1}]
+        ]
+    },
+
+
+    /* ==========
+        ITERATOR
+       ========== */
+    "iterator": {
+        "type": "bucket",
+        "batch_size": 8
+        // SORTING KEYS???
+    },
+
+
+    /* =========
+        TRAINER
+       ========= */
+    "trainer": {
+        "optimizer": {
+            "type": "adam",
+            "lr": 0.001
+        },
+        "validation_metric": "+f1-measure-overall",
+        "num_serialized_models_to_keep": 3,
+        "num_epochs": 80,
+        "grad_norm": 5.0,
+        "patience": 10,
+        "cuda_device": 0
+    }
+}
