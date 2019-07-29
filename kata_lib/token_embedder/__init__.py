@@ -1,1 +1,2 @@
 from kata_lib.token_embedder.seq2seq_encoder_token_embedder import Seq2SeqEncoderTokenEmbedder
+from kata_lib.token_embedder.identity_token_embedder import IdentityTokenEmbedder

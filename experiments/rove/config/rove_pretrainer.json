@@ -26,17 +26,18 @@
         "type": "rove_trainer",
         "text_field_embedder": {
             "rove": {
-                "type": "seq2seq_encoder",
-                "encoder": {
-                    "type": "lstm",
-                    "input_size": ,
-                    "hidden_size": 128,
-                    "num_layers": 2,
-                    "dropout": 0.2,
-                    "bidirectional": true
-                }
+                "type": "identity"
             }
         },
+        "encoder": {
+            "type": "lstm",
+            "input_size": 672,
+            "hidden_size": 128,
+            "num_layers": 2,
+            "dropout": 0.2,
+            "bidirectional": true
+         },
+        "projection_dim": 100,
         "window_size": 3,
         "neg_sample": 5
     },
@@ -46,7 +47,8 @@
        ========== */
     "iterator": {
         "type": "bucket",
-        "batch_size": 32
+        "batch_size": 32,
+        "sorting_keys": [["sentence", "num_tokens"]]
     },
 
     /* =========
@@ -57,6 +59,10 @@
             "type": "Adam",
             "lr"  : 0.001
         },
-
+        "cuda_device": 0,
+        "num_epochs": 2,
+        "num_serialized_models_to_keep": 3,
+        "grad_norm": 5.0,
+        "patience": 25
     }
 }
