@@ -11,8 +11,9 @@ from allennlp.data.instance import Instance
 @DatasetReader.register("plain_reader")
 class PlainReader(DatasetReader):
     def __init__(self,
-                 token_indexers: Dict[str, TokenIndexer]) -> None:
-        super().__init__(lazy=False)
+                 token_indexers: Dict[str, TokenIndexer],
+                 lazy: bool = False) -> None:
+        super().__init__(lazy=lazy)
         self.token_indexers = token_indexers
 
     def text_to_instance(self,

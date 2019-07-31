@@ -1,0 +1,68 @@
+{
+    /* ===========
+        VARIABLES
+       =========== */
+    "train_data_path": "/home/guntara/data-gpu/guntara_workspace/informal-data/working/split.txt",
+
+    /* ================
+        DATASET READER
+       ================ */
+    "dataset_reader": {
+        "type": "plain_reader",
+        "token_indexers": {
+            "rove": {
+                "type": "bme"
+            }
+        },
+        "lazy": true
+    },
+
+    /* =======
+        MODEL
+       ======= */
+    "model": {
+        "type": "rove_trainer",
+        "text_field_embedder": {
+            "rove": {
+                "type": "identity"
+            }
+        },
+        "encoder": {
+            "type": "lstm",
+            "input_size": 672, // jemma.data vocab
+            "hidden_size": 128,
+            "num_layers": 2,
+            "dropout": 0.2,
+            "bidirectional": true
+         },
+        "projection_dim": 100,
+        "window_size": 3,
+        "neg_sample": 5
+    },
+
+    /* ==========
+        ITERATOR
+       ========== */
+    "iterator": {
+        "type": "basic",
+        "batch_size": 32,
+        "instances_per_epoch": 32000,
+        "max_instances_in_memory": 32000
+    },
+
+    /* =========
+        TRAINER
+       ========= */
+    "trainer": {
+        "optimizer": {
+            "type": "adam",
+            "lr"  : 0.001
+        },
+        "cuda_device": 0,
+        "num_epochs": 200,
+        "num_serialized_models_to_keep": 3,
+        "grad_norm": 5.0,
+        "grad_clipping": 5.0,
+        "patience": 25
+    }
+}
